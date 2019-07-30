@@ -1,0 +1,109 @@
+﻿<Window x:Class="MeowType.NetDebug.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:MeowType.NetDebug"
+        mc:Ignorable="d"
+        Title="Net Debug" Height="450" Width="800" MinHeight="450" MinWidth="800">
+    <Grid Margin="5">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition MinWidth="200" Width="0.5*" MaxWidth="300"></ColumnDefinition>
+            <ColumnDefinition Width="1*"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        <Grid Grid.Column="0">
+            <TabControl>
+                <TabItem Name="Tab_Tcp_Server" Header="Tcp Server">
+                    <Grid Background="#FFE5E5E5"/>
+                </TabItem>
+                <TabItem Name="Tab_Tcp_Client" Header="Tcp Client">
+                    <Grid Background="#FFE5E5E5"/>
+                </TabItem>
+                <TabItem Name="Tab_Udp" Header="Udp" IsSelected="True">
+                    <Grid Margin="10,0">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="50"></RowDefinition>
+                            <RowDefinition Height="50"></RowDefinition>
+                            <RowDefinition Height="100"></RowDefinition>
+                            <RowDefinition Height="50"></RowDefinition>
+                            <RowDefinition Height="50"></RowDefinition>
+                            <RowDefinition Height="50"></RowDefinition>
+                        </Grid.RowDefinitions>
+                        <Grid Grid.Row="0">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="1*"></RowDefinition>
+                                <RowDefinition Height="1*"></RowDefinition>
+                            </Grid.RowDefinitions>
+                            <Label Grid.Row="0">Local IP</Label>
+                            <ComboBox Grid.Row="1" IsEditable="True" Name="UDP_Local_ip" SelectedIndex="0">
+                                <Label ToolTip="127.0.0.1">localhost</Label>
+                            </ComboBox>
+                        </Grid>
+                        <Grid Grid.Row="1">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="1*"></RowDefinition>
+                                <RowDefinition Height="1*"></RowDefinition>
+                            </Grid.RowDefinitions>
+                            <Label Grid.Row="0">Local Port</Label>
+                            <TextBox Grid.Row="1" Name="UDP_Local_port">12345</TextBox>
+                        </Grid>
+                        <Grid Grid.Row="2" Margin="0,10">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="1*"></RowDefinition>
+                                <RowDefinition Height="1*"></RowDefinition>
+                                <RowDefinition Height="1*"></RowDefinition>
+                                <RowDefinition Height="1*"></RowDefinition>
+                            </Grid.RowDefinitions>
+                            <RadioButton Name="UDP_type_defalut" GroupName="UDP_type" IsChecked="True">Default</RadioButton>
+                            <RadioButton Name="UDP_type_broadcast" GroupName="UDP_type" Grid.Row="1" Checked="UDP_type_broadcast_Checked" Unchecked="UDP_type_broadcast_UnChecked">Broadcast</RadioButton>
+                            <RadioButton Name="UDP_type_multicast" GroupName="UDP_type" Grid.Row="2">Multicast</RadioButton>
+                            <ComboBox Grid.Row="3" IsEditable="True" Name="UDP_multicast_ip" SelectedIndex="0" Margin="20,0,0,0">
+                                <Label>224.0.0.0</Label>
+                                <Label>224.0.0.1</Label>
+                            </ComboBox>
+                        </Grid>
+                        <Button Name="UDP_button" Grid.Row="3" Margin="20,5" Click="Button_Click" FontSize="16">Open</Button>
+                        <Grid Grid.Row="4">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="1*"></RowDefinition>
+                                <RowDefinition Height="1*"></RowDefinition>
+                            </Grid.RowDefinitions>
+                            <Label Grid.Row="0">Target IP</Label>
+                            <ComboBox Grid.Row="1" IsEditable="True" Name="UDP_Target_ip" SelectedIndex="0" Loaded="UDP_Target_ip_Loaded">
+                                <Label ToolTip="127.0.0.1">localhost</Label>
+                                <Label Name="UDP_Target_ip_broadcast" ToolTip="255.255.255.255">broadcast</Label>
+                            </ComboBox>
+                        </Grid>
+                        <Grid Grid.Row="5">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="1*"></RowDefinition>
+                                <RowDefinition Height="1*"></RowDefinition>
+                            </Grid.RowDefinitions>
+                            <Label Grid.Row="0">Target Port</Label>
+                            <TextBox Grid.Row="1" Name="UDP_Target_port">12345</TextBox>
+                        </Grid>
+                    </Grid>
+                </TabItem>
+                <TabItem Name="Tab_Custom" Header="Custom">
+                    
+                </TabItem>
+            </TabControl>
+        </Grid>
+        <Grid Grid.Column="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="1*"></RowDefinition>
+                <RowDefinition Height="60"></RowDefinition>
+            </Grid.RowDefinitions>
+            <RichTextBox Grid.Row="0" Name="MsgBox" Margin="10,0,0,0" FontFamily="Consolas, Fira Code Light"/>
+            <Grid Grid.Row="1" Margin="10,5,0,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1*"></ColumnDefinition>
+                    <ColumnDefinition Width="0.25*" MinWidth="50" MaxWidth="120"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <RichTextBox Name="Send_Msg" Grid.Column="0" Margin="0,0,5,0" Keyboard.KeyUp="Send_Msg_KeyUp"/>
+                <Button Name="Send_Button" Grid.Column="1" Click="Send_Button_Click" IsEnabled="False">Send</Button>
+            </Grid>
+        </Grid>
+
+    </Grid>
+</Window>
