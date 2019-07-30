@@ -45,6 +45,7 @@ namespace MeowType.NetDebug
                 UDP_type_defalut.IsEnabled = false;
                 UDP_type_broadcast.IsEnabled = false;
                 UDP_type_multicast.IsEnabled = false;
+                UDP_multicast_ip.IsEnabled = false;
 
                 Send_Button.IsEnabled = true;
             }
@@ -63,6 +64,7 @@ namespace MeowType.NetDebug
                 UDP_type_defalut.IsEnabled = true;
                 UDP_type_broadcast.IsEnabled = true;
                 UDP_type_multicast.IsEnabled = true;
+                UDP_multicast_ip.IsEnabled = true;
 
                 Send_Button.IsEnabled = false;
             }
@@ -74,6 +76,7 @@ namespace MeowType.NetDebug
             {
                 switch (str)
                 {
+                    case "loopback":
                     case "localhost": return IPAddress.Loopback;
                     case "broadcast": return IPAddress.Broadcast;
                     default: return IPAddress.Any;
@@ -82,6 +85,78 @@ namespace MeowType.NetDebug
             return ip;
         }
 
+        void LogSystem(string msg)
+        {
+            Dispatcher.Invoke(() =>
+            {
+                MsgBox.Document.Blocks.Add(new Paragraph()
+                {
+                    Inlines = {
+                        new Run($"[ {DateTime.Now.ToString("zzz yyyy.MM.dd tt hh:mm:ss:fff")} ] [Info]"){
+                            Foreground = new SolidColorBrush(Colors.DarkGray),
+                            Typography =
+                            {
+                                StylisticAlternates = 1,
+                            }
+                        },
+                        new LineBreak(),
+                        new Run(msg){
+                            Typography =
+                            {
+                                StylisticAlternates = 1,
+                            }
+                        },
+                    },
+                    Typography =
+                    {
+                        StandardLigatures = true,
+                        ContextualLigatures = true,
+                        DiscretionaryLigatures = true,
+                        HistoricalLigatures = true,
+                        ContextualAlternates = true,
+                    },
+                });
+
+                MsgBox.ScrollToEnd();
+            });
+        }
+
+        void LogError(Exception ex)
+        {
+            Dispatcher.Invoke(() =>
+            {
+                MsgBox.Document.Blocks.Add(new Paragraph()
+                {
+                    Inlines = {
+                        new Run($"[ {DateTime.Now.ToString("zzz yyyy.MM.dd tt hh:mm:ss:fff")} ] [Error]"){
+                            Foreground = new SolidColorBrush(Colors.DarkRed),
+                            Typography =
+                            {
+                                StylisticAlternates = 1,
+                            }
+                        },
+                        new LineBreak(),
+                        new Run(ex.ToString()){
+                            Foreground = new SolidColorBrush(Colors.Red),
+                            Typography =
+                            {
+                                StylisticAlternates = 1,
+                            }
+                        },
+                    },
+                    Typography =
+                    {
+                        StandardLigatures = true,
+                        ContextualLigatures = true,
+                        DiscretionaryLigatures = true,
+                        HistoricalLigatures = true,
+                        ContextualAlternates = true,
+                    },
+                });
+
+                MsgBox.ScrollToEnd();
+            });
+        }
         void Log(EndPoint ep, string msg, bool from = false)
         {
             msg = msg.Replace("\0", string.Empty);
@@ -100,7 +175,7 @@ namespace MeowType.NetDebug
                 MsgBox.Document.Blocks.Add(new Paragraph()
                 {
                     Inlines = {
-                        new Run($"[{DateTime.Now.ToString("zzz yyyy.MM.dd tt hh:mm:ss:fff")} ]"){
+                        new Run($"[ {DateTime.Now.ToString("zzz yyyy.MM.dd tt hh:mm:ss:fff")} ]"){
                             Foreground = new SolidColorBrush(Colors.DarkGray),
                             Typography =
                             {
@@ -138,7 +213,9 @@ namespace MeowType.NetDebug
                         HistoricalLigatures = true,
                         ContextualAlternates = true,
                     },
-                }) ;
+                });
+
+                MsgBox.ScrollToEnd();
             });
 
         }
@@ -152,7 +229,7 @@ namespace MeowType.NetDebug
         Socket socket;
         CancellationTokenSource loop;
         List<Task> loops = new List<Task>();
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private void Open_Button_Click(object sender, RoutedEventArgs e)
         {
             if (socket != null)
             {
@@ -194,10 +271,26 @@ namespace MeowType.NetDebug
                 socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
                 socket.Bind(new IPEndPoint(ip, port));
 
+                LogSystem($"Open on {{ {ip} :{port} }}");
+
                 SetEnables();
                 nowType = NowType.Udp;
 
                 socket.EnableBroadcast = UDP_type_broadcast.IsChecked ?? false;
+
+                if(UDP_type_broadcast.IsChecked ?? false)
+                {
+                    LogSystem($"Enabled Broadcast on {{ {ParseIp(UDP_Target_ip.Text)} }}");
+                }
+
+                if (UDP_type_multicast.IsChecked ?? false)
+                {
+                    var mip = ParseIp(UDP_multicast_ip.Text);
+                    var opt = new MulticastOption(mip, ip);
+                    socket.SetSocketOption(SocketOptionLevel.IP, SocketOptionName.AddMembership, opt);
+
+                    LogSystem($"Join Multicast Group {{ {mip} }}");
+                }
 
                 loop = new CancellationTokenSource();
                 loops.Add(Task.Run(() =>
@@ -217,7 +310,14 @@ namespace MeowType.NetDebug
                         }
                         catch (Exception ex)
                         {
-                            MessageBox.Show(ex.ToString(), ex.Message, MessageBoxButton.OK, MessageBoxImage.Error);
+                            if(socket == null)
+                            {
+                                LogSystem("Closed");
+                            }
+                            else
+                            {
+                                LogError(ex);
+                            }
                             return;
                         }
                     }
@@ -225,7 +325,7 @@ namespace MeowType.NetDebug
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.ToString(), ex.Message, MessageBoxButton.OK, MessageBoxImage.Error);
+                LogError(ex);
                 return;
             }
         }
@@ -250,19 +350,12 @@ namespace MeowType.NetDebug
                 try
                 {
                     var @byte = Encoding.Default.GetBytes(new TextRange(Send_Msg.Document.ContentStart, Send_Msg.Document.ContentEnd).Text);
-                    if(UDP_type_broadcast.IsChecked ?? false)
-                    {
-                        socket.SendTo(@byte, @byte.Length, SocketFlags.Broadcast, new IPEndPoint(ip, port));
-                    }
-                    else
-                    {
-                        socket.SendTo(@byte, @byte.Length, SocketFlags.None, new IPEndPoint(ip, port));
-                    }
+                    socket.SendTo(@byte, new IPEndPoint(ip, port));
                     Log(new IPEndPoint(ip, port), new TextRange(Send_Msg.Document.ContentStart, Send_Msg.Document.ContentEnd).Text);
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show(ex.ToString(), ex.Message, MessageBoxButton.OK, MessageBoxImage.Error);
+                    LogError(ex);
                     return;
                 }
             }
@@ -286,6 +379,31 @@ namespace MeowType.NetDebug
         private void Send_Msg_KeyUp(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Enter) Send_Button.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+        }
+
+        private void UDP_type_multicast_Checked(object sender, RoutedEventArgs e)
+        {
+            UDP_Target_ip.IsEnabled = false;
+        }
+
+        private void UDP_type_multicast_Unchecked(object sender, RoutedEventArgs e)
+        {
+            UDP_Target_ip.IsEnabled = true;
+        }
+
+        private void Clear_Button_Click(object sender, RoutedEventArgs e)
+        {
+            MsgBox.Document.Blocks.Clear();
+        }
+
+        private void MsgBox_Loaded(object sender, RoutedEventArgs e)
+        {
+            MsgBox.Document.Blocks.Clear();
+        }
+
+        private void Clear_Send_Button_Click(object sender, RoutedEventArgs e)
+        {
+            Send_Msg.Document.Blocks.Clear();
         }
     }
 }

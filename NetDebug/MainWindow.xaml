@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MeowType.NetDebug"
         mc:Ignorable="d"
-        Title="Net Debug" Height="450" Width="800" MinHeight="450" MinWidth="800">
+        Title="Net Debug" Height="450" Width="800" MinHeight="450" MinWidth="800" FontFamily="Consolas, Fira Code">
     <Grid Margin="5">
         <Grid.ColumnDefinitions>
             <ColumnDefinition MinWidth="200" Width="0.5*" MaxWidth="300"></ColumnDefinition>
@@ -56,13 +56,13 @@
                             </Grid.RowDefinitions>
                             <RadioButton Name="UDP_type_defalut" GroupName="UDP_type" IsChecked="True">Default</RadioButton>
                             <RadioButton Name="UDP_type_broadcast" GroupName="UDP_type" Grid.Row="1" Checked="UDP_type_broadcast_Checked" Unchecked="UDP_type_broadcast_UnChecked">Broadcast</RadioButton>
-                            <RadioButton Name="UDP_type_multicast" GroupName="UDP_type" Grid.Row="2">Multicast</RadioButton>
-                            <ComboBox Grid.Row="3" IsEditable="True" Name="UDP_multicast_ip" SelectedIndex="0" Margin="20,0,0,0">
+                            <RadioButton Name="UDP_type_multicast" GroupName="UDP_type" Grid.Row="2" Checked="UDP_type_multicast_Checked" Unchecked="UDP_type_multicast_Unchecked">Multicast</RadioButton>
+                            <ComboBox Grid.Row="3" IsEditable="True" Name="UDP_multicast_ip" SelectedIndex="0" Loaded="UDP_Target_ip_Loaded" Margin="20,0,0,0">
                                 <Label>224.0.0.0</Label>
                                 <Label>224.0.0.1</Label>
                             </ComboBox>
                         </Grid>
-                        <Button Name="UDP_button" Grid.Row="3" Margin="20,5" Click="Button_Click" FontSize="16">Open</Button>
+                        <Button Name="UDP_button" Grid.Row="3" Margin="20,5" Click="Open_Button_Click" FontSize="16">Open</Button>
                         <Grid Grid.Row="4">
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="1*"></RowDefinition>
@@ -94,14 +94,23 @@
                 <RowDefinition Height="1*"></RowDefinition>
                 <RowDefinition Height="60"></RowDefinition>
             </Grid.RowDefinitions>
-            <RichTextBox Grid.Row="0" Name="MsgBox" Margin="10,0,0,0" FontFamily="Consolas, Fira Code Light"/>
+            <RichTextBox Grid.Row="0" Name="MsgBox" Margin="10,0,0,0" VerticalScrollBarVisibility="Auto" FontFamily="Consolas, Fira Code Light" IsReadOnly="True" Loaded="MsgBox_Loaded"/>
             <Grid Grid.Row="1" Margin="10,5,0,0">
                 <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="50"></ColumnDefinition>
                     <ColumnDefinition Width="1*"></ColumnDefinition>
                     <ColumnDefinition Width="0.25*" MinWidth="50" MaxWidth="120"></ColumnDefinition>
                 </Grid.ColumnDefinitions>
-                <RichTextBox Name="Send_Msg" Grid.Column="0" Margin="0,0,5,0" Keyboard.KeyUp="Send_Msg_KeyUp"/>
-                <Button Name="Send_Button" Grid.Column="1" Click="Send_Button_Click" IsEnabled="False">Send</Button>
+                <Grid Grid.Column="0">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="1*"></RowDefinition>
+                        <RowDefinition Height="1*"></RowDefinition>
+                    </Grid.RowDefinitions>
+                    <Button Grid.Row="0" Click="Clear_Button_Click" Margin="0,0,0,2.5">Clear↑</Button>
+                    <Button Grid.Row="1" Click="Clear_Send_Button_Click" Margin="0,2.5,0,0">Clear→</Button>
+                </Grid>
+                <RichTextBox Name="Send_Msg" Grid.Column="1" Margin="5,0" Keyboard.KeyUp="Send_Msg_KeyUp"/>
+                <Button Name="Send_Button" Grid.Column="2" Click="Send_Button_Click" IsEnabled="False" FontSize="20">Send</Button>
             </Grid>
         </Grid>
 
