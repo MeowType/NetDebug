@@ -59,7 +59,6 @@
                             <RadioButton Name="UDP_type_multicast" GroupName="UDP_type" Grid.Row="2" Checked="UDP_type_multicast_Checked" Unchecked="UDP_type_multicast_Unchecked">Multicast</RadioButton>
                             <ComboBox Grid.Row="3" IsEditable="True" Name="UDP_multicast_ip" SelectedIndex="0" Loaded="UDP_Target_ip_Loaded" Margin="20,0,0,0">
                                 <Label>224.0.0.0</Label>
-                                <Label>224.0.0.1</Label>
                             </ComboBox>
                         </Grid>
                         <Button Name="UDP_button" Grid.Row="3" Margin="20,5" Click="Open_Button_Click" FontSize="16">Open</Button>

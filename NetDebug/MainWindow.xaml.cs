@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Net.NetworkInformation;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
@@ -74,33 +75,37 @@ namespace MeowType.NetDebug
         {
             if (!IPAddress.TryParse(str, out var ip))
             {
-                switch (str)
+                switch (str.ToLower())
                 {
                     case "loopback":
                     case "localhost": return IPAddress.Loopback;
                     case "broadcast": return IPAddress.Broadcast;
-                    default: return IPAddress.IPv6Any;
+                    
+                    case "ipv6any":
+                    case "v6any":
+                    case "anyv6":
+                    case "anyipv6": return IPAddress.IPv6Any;
+
+                    case "ipv4any":
+                    case "v4any":
+                    case "anyv4":
+                    case "anyipv4":
+                    case "any": 
+                    default: return IPAddress.Any;
                 }
             }
             return ip;
         }
 
-        void LogSystem(string msg)
+        void LogSystem(params string[] msgs)
         {
             Dispatcher.Invoke(() =>
             {
-                MsgBox.Document.Blocks.Add(new Paragraph()
+                var p = new Paragraph()
                 {
                     Inlines = {
                         new Run($"[ {DateTime.Now.ToString("zzz yyyy.MM.dd tt hh:mm:ss:fff")} ] [Info]"){
                             Foreground = new SolidColorBrush(Colors.DarkGray),
-                            Typography =
-                            {
-                                StylisticAlternates = 1,
-                            }
-                        },
-                        new LineBreak(),
-                        new Run(msg){
                             Typography =
                             {
                                 StylisticAlternates = 1,
@@ -115,7 +120,15 @@ namespace MeowType.NetDebug
                         HistoricalLigatures = true,
                         ContextualAlternates = true,
                     },
-                });
+                };
+                p.Inlines.AddRange(msgs.SelectMany(msg =>
+                    new Inline[]{
+                        new LineBreak(),
+                        new Run(msg) { Typography = { StylisticAlternates = 1, }
+                    }
+                }));
+                if (msgs.Length == 0) p.Inlines.Add(new LineBreak());
+                MsgBox.Document.Blocks.Add(p);
 
                 MsgBox.ScrollToEnd();
             });
@@ -227,6 +240,7 @@ namespace MeowType.NetDebug
         NowType nowType = NowType.Udp;
 
         object socket;
+        List<UdpClient> sendClients = new List<UdpClient>();
         CancellationTokenSource loop;
         List<Task> loops = new List<Task>();
         private void Open_Button_Click(object sender, RoutedEventArgs e)
@@ -237,6 +251,15 @@ namespace MeowType.NetDebug
                 {
                     uc.Close();
                     uc.Dispose();
+                    if (sendClients != null)
+                    {
+                        sendClients.ForEach(send =>
+                        {
+                            send.Close();
+                            send.Dispose();
+                        });
+                        sendClients = null;
+                    }
                 }
                 else if (socket is Socket sk)
                 {
@@ -270,7 +293,8 @@ namespace MeowType.NetDebug
                 }
                 return;
             }
-            var ip = ParseIp(UDP_Local_ip.Text);
+
+            var ip = UDP_type_multicast.IsChecked ?? false ? IPAddress.Any :ParseIp(UDP_Local_ip.Text);
             int port;
             try { port = Convert.ToInt32(UDP_Local_port.Text); }
             catch
@@ -288,8 +312,6 @@ namespace MeowType.NetDebug
             {
                 var uc = new UdpClient(new IPEndPoint(ip, port));
                 socket = uc;
-                //socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
-                //socket.Bind(new IPEndPoint(ip, port));
 
                 LogSystem($"Open on {{ {ip} :{port} }}");
 
@@ -306,11 +328,26 @@ namespace MeowType.NetDebug
                 if (UDP_type_multicast.IsChecked ?? false)
                 {
                     var mip = ParseIp(UDP_multicast_ip.Text);
-                    //var opt = new MulticastOption(mip, ip);
-                    uc.JoinMulticastGroup(mip);
-                    //socket.SetSocketOption(SocketOptionLevel.IP, SocketOptionName.AddMembership, opt);
 
-                    LogSystem($"Join Multicast Group {{ {mip} }}");
+                    sendClients = new List<UdpClient>();
+
+                    var msgs = (from networkInterface in NetworkInterface.GetAllNetworkInterfaces()
+                    where networkInterface.OperationalStatus == OperationalStatus.Up
+                    select networkInterface.GetIPProperties()
+                        .UnicastAddresses.First(addr => 
+                            addr.Address.AddressFamily == AddressFamily.InterNetwork)?.Address)
+                    .Where(address => address != null)
+                    .Select(addr =>
+                    {
+                        uc.JoinMulticastGroup(mip, addr);
+                        sendClients.Add(new UdpClient(new IPEndPoint(addr, port)));
+                        return $"Join Multicast Group {{ {mip} on {addr} }}";
+                    });
+
+                    LogSystem(msgs.ToArray());
+
+                    //uc.JoinMulticastGroup(mip);
+                    //LogSystem($"Join Multicast Group {{ {mip} }}");
                 }
 
                 loop = new CancellationTokenSource();
@@ -354,7 +391,7 @@ namespace MeowType.NetDebug
         {
             if(nowType == NowType.Udp)
             {
-                var ip = ParseIp(UDP_Target_ip.Text);
+                var ip = UDP_type_multicast.IsChecked ?? false ? ParseIp(UDP_multicast_ip.Text) : ParseIp(UDP_Target_ip.Text);
                 int port;
                 try { port = Convert.ToInt32(UDP_Target_port.Text); }
                 catch
@@ -370,7 +407,13 @@ namespace MeowType.NetDebug
                 try
                 {
                     var @byte = Encoding.Default.GetBytes(new TextRange(Send_Msg.Document.ContentStart, Send_Msg.Document.ContentEnd).Text);
-                    if(socket is UdpClient uc)
+                    if(UDP_type_multicast.IsChecked ?? false)
+                    {
+                        sendClients.ForEach(send =>
+                        {
+                            send.Send(@byte, @byte.Length, new IPEndPoint(ip, port));
+                        });
+                    } else if (socket is UdpClient uc)
                     {
                         uc.Send(@byte, @byte.Length, new IPEndPoint(ip, port));
                     }
@@ -378,7 +421,6 @@ namespace MeowType.NetDebug
                     {
                         throw new SocketException();
                     }
-                    //socket.SendTo(@byte, new IPEndPoint(ip, port));
                     Log(new IPEndPoint(ip, port), new TextRange(Send_Msg.Document.ContentStart, Send_Msg.Document.ContentEnd).Text);
                 }
                 catch (Exception ex)
@@ -416,11 +458,13 @@ namespace MeowType.NetDebug
         private void UDP_type_multicast_Checked(object sender, RoutedEventArgs e)
         {
             UDP_Target_ip.IsEnabled = false;
+            UDP_Local_ip.IsEnabled = false;
         }
 
         private void UDP_type_multicast_Unchecked(object sender, RoutedEventArgs e)
         {
             UDP_Target_ip.IsEnabled = true;
+            UDP_Local_ip.IsEnabled = true;
         }
 
         private void Clear_Button_Click(object sender, RoutedEventArgs e)
