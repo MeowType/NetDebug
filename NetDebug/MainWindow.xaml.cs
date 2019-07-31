@@ -79,7 +79,7 @@ namespace MeowType.NetDebug
                     case "loopback":
                     case "localhost": return IPAddress.Loopback;
                     case "broadcast": return IPAddress.Broadcast;
-                    default: return IPAddress.Any;
+                    default: return IPAddress.IPv6Any;
                 }
             }
             return ip;
@@ -226,30 +226,48 @@ namespace MeowType.NetDebug
         }
         NowType nowType = NowType.Udp;
 
-        Socket socket;
+        object socket;
         CancellationTokenSource loop;
         List<Task> loops = new List<Task>();
         private void Open_Button_Click(object sender, RoutedEventArgs e)
         {
             if (socket != null)
             {
-                socket.Close();
+                if (socket is UdpClient uc)
+                {
+                    uc.Close();
+                    uc.Dispose();
+                }
+                else if (socket is Socket sk)
+                {
+                    sk.Close();
+                    sk.Dispose();
+                }
                 socket = null;
                 SetEnables();
-                loop.Cancel();
-                var nloop = loop;
-                loop = null;
-                Task.Run(async () =>
+                try
                 {
-                    try
+                    loop.Cancel();
+                    var nloop = loop;
+                    var nloops = loops;
+                    loop = null;
+                    loops = new List<Task>();
+                    Task.Run(async () =>
                     {
-                        await Task.WhenAll(loops);
-                    }
-                    finally
-                    {
-                        nloop.Dispose();
-                    }
-                });
+                        try
+                        {
+                            await Task.WhenAll(nloops);
+                        }
+                        finally
+                        {
+                            nloop.Dispose();
+                        }
+                    });
+                }
+                catch (Exception ex)
+                {
+                    LogError(ex);
+                }
                 return;
             }
             var ip = ParseIp(UDP_Local_ip.Text);
@@ -268,15 +286,17 @@ namespace MeowType.NetDebug
 
             try
             {
-                socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
-                socket.Bind(new IPEndPoint(ip, port));
+                var uc = new UdpClient(new IPEndPoint(ip, port));
+                socket = uc;
+                //socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
+                //socket.Bind(new IPEndPoint(ip, port));
 
                 LogSystem($"Open on {{ {ip} :{port} }}");
 
                 SetEnables();
                 nowType = NowType.Udp;
 
-                socket.EnableBroadcast = UDP_type_broadcast.IsChecked ?? false;
+                uc.EnableBroadcast = UDP_type_broadcast.IsChecked ?? false;
 
                 if(UDP_type_broadcast.IsChecked ?? false)
                 {
@@ -286,8 +306,9 @@ namespace MeowType.NetDebug
                 if (UDP_type_multicast.IsChecked ?? false)
                 {
                     var mip = ParseIp(UDP_multicast_ip.Text);
-                    var opt = new MulticastOption(mip, ip);
-                    socket.SetSocketOption(SocketOptionLevel.IP, SocketOptionName.AddMembership, opt);
+                    //var opt = new MulticastOption(mip, ip);
+                    uc.JoinMulticastGroup(mip);
+                    //socket.SetSocketOption(SocketOptionLevel.IP, SocketOptionName.AddMembership, opt);
 
                     LogSystem($"Join Multicast Group {{ {mip} }}");
                 }
@@ -295,14 +316,13 @@ namespace MeowType.NetDebug
                 loop = new CancellationTokenSource();
                 loops.Add(Task.Run(() =>
                 {
-                    while (socket != null)
+                    while (socket != null || socket != uc)
                     {
-                        var buffer = new byte[1024];
-                        
                         try
                         {
-                            EndPoint ep = new IPEndPoint(IPAddress.Any, 0);
-                            socket.ReceiveFrom(buffer, SocketFlags.None, ref ep);
+                            var ep = new IPEndPoint(IPAddress.Any, 0);
+
+                            var buffer = uc.Receive(ref ep);
 
                             var str = Encoding.Default.GetString(buffer);
 
@@ -310,7 +330,7 @@ namespace MeowType.NetDebug
                         }
                         catch (Exception ex)
                         {
-                            if(socket == null)
+                            if(socket == null || socket != uc)
                             {
                                 LogSystem("Closed");
                             }
@@ -350,7 +370,15 @@ namespace MeowType.NetDebug
                 try
                 {
                     var @byte = Encoding.Default.GetBytes(new TextRange(Send_Msg.Document.ContentStart, Send_Msg.Document.ContentEnd).Text);
-                    socket.SendTo(@byte, new IPEndPoint(ip, port));
+                    if(socket is UdpClient uc)
+                    {
+                        uc.Send(@byte, @byte.Length, new IPEndPoint(ip, port));
+                    }
+                    else
+                    {
+                        throw new SocketException();
+                    }
+                    //socket.SendTo(@byte, new IPEndPoint(ip, port));
                     Log(new IPEndPoint(ip, port), new TextRange(Send_Msg.Document.ContentStart, Send_Msg.Document.ContentEnd).Text);
                 }
                 catch (Exception ex)
@@ -363,12 +391,16 @@ namespace MeowType.NetDebug
 
         private void UDP_type_broadcast_Checked(object sender, RoutedEventArgs e)
         {
-            UDP_Target_ip.Items.Add(UDP_Target_ip_broadcast);
+            UDP_Target_ip.Items.Insert(0, UDP_Target_ip_broadcast);
+            UDP_Target_ip.Items.Remove(UDP_Target_ip_localhost);
+            UDP_Target_ip.SelectedIndex = 0;
         }
 
         private void UDP_type_broadcast_UnChecked(object sender, RoutedEventArgs e)
         {
             UDP_Target_ip.Items.Remove(UDP_Target_ip_broadcast);
+            UDP_Target_ip.Items.Insert(0, UDP_Target_ip_localhost);
+            UDP_Target_ip.SelectedIndex = 0;
         }
 
         private void UDP_Target_ip_Loaded(object sender, RoutedEventArgs e)
@@ -404,6 +436,18 @@ namespace MeowType.NetDebug
         private void Clear_Send_Button_Click(object sender, RoutedEventArgs e)
         {
             Send_Msg.Document.Blocks.Clear();
+        }
+
+        private void UDP_Local_ip_Loaded(object sender, RoutedEventArgs e)
+        {
+            UDP_Local_ip.Items.Clear();
+            var host = Dns.GetHostEntry(Dns.GetHostName());
+            foreach (var ip in host.AddressList.Select(ip => ip.ToString()).Distinct())
+            {
+                UDP_Local_ip.Items.Add(ip);
+            }
+            UDP_Local_ip.Items.Insert(0, UDP_Local_ip_localhost);
+            UDP_Local_ip.SelectedIndex = 0;
         }
     }
 }

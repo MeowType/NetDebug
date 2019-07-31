@@ -35,8 +35,8 @@
                                 <RowDefinition Height="1*"></RowDefinition>
                             </Grid.RowDefinitions>
                             <Label Grid.Row="0">Local IP</Label>
-                            <ComboBox Grid.Row="1" IsEditable="True" Name="UDP_Local_ip" SelectedIndex="0">
-                                <Label ToolTip="127.0.0.1">localhost</Label>
+                            <ComboBox Grid.Row="1" IsEditable="True" Name="UDP_Local_ip" SelectedIndex="0" Loaded="UDP_Local_ip_Loaded">
+                                <Label Name="UDP_Local_ip_localhost" ToolTip="127.0.0.1">localhost</Label>
                             </ComboBox>
                         </Grid>
                         <Grid Grid.Row="1">
@@ -70,7 +70,7 @@
                             </Grid.RowDefinitions>
                             <Label Grid.Row="0">Target IP</Label>
                             <ComboBox Grid.Row="1" IsEditable="True" Name="UDP_Target_ip" SelectedIndex="0" Loaded="UDP_Target_ip_Loaded">
-                                <Label ToolTip="127.0.0.1">localhost</Label>
+                                <Label Name="UDP_Target_ip_localhost" ToolTip="127.0.0.1">localhost</Label>
                                 <Label Name="UDP_Target_ip_broadcast" ToolTip="255.255.255.255">broadcast</Label>
                             </ComboBox>
                         </Grid>
