@@ -6,7 +6,29 @@
         xmlns:local="clr-namespace:MeowType.NetDebug"
         mc:Ignorable="d"
         Title="Net Debug" Height="450" Width="800" MinHeight="250" MinWidth="600" FontFamily="Consolas, Fira Code">
-    <Grid>
+    <WindowChrome.WindowChrome>
+        <WindowChrome GlassFrameThickness="-1" NonClientFrameEdges="Left,Bottom,Right"/>
+    </WindowChrome.WindowChrome>
+    <Window.Template>
+        <ControlTemplate TargetType="Window">
+            <Border x:Name="RootBorder" Padding="3,35,3,3">
+                <Grid x:Name="RootGrid" Background="{TemplateBinding Background}">
+                    <Border Background="Transparent"
+                        VerticalAlignment="Top" Height="30" Margin="0 -29 140 0">
+                        <local:TabBar></local:TabBar>
+                    </Border>
+                    <ContentPresenter />
+                </Grid>
+            </Border>
+            <ControlTemplate.Triggers>
+                <Trigger Property="WindowState" Value="Maximized">
+                    <Setter TargetName="RootGrid" Property="Margin" Value="5" />
+                    <Setter TargetName="RootBorder" Property="Padding" Value="2,30,2,2" />
+                </Trigger>
+            </ControlTemplate.Triggers>
+        </ControlTemplate>
+    </Window.Template>
+    <Grid Background="White">
         <local:Udp></local:Udp>
     </Grid>
 </Window>

@@ -12,7 +12,7 @@ namespace MeowType.NetDebug
     internal static class Utils
     {
         public readonly static DependencyProperty DefaultPortProperty = DependencyProperty.Register("DefaultPort", typeof(string), typeof(PortKind), new PropertyMetadata("12345"));
-        public readonly static DependencyProperty OnSendProperty = DependencyProperty.Register("OnSendDelegate", typeof(Action<object, RoutedEventArgs>), typeof(MsgBox));
+        public readonly static DependencyProperty TabTextProperty = DependencyProperty.Register("Title", typeof(string), typeof(Tab), new PropertyMetadata("NoTitle"));
 
         public readonly static FontFamily FiraCodeLight = new FontFamily(new Uri("pack://application:,,,/"), "./#Fira Code Light");
 

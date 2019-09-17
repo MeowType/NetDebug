@@ -75,6 +75,15 @@
       <DependentUpon>MsgBox.xaml</DependentUpon>
     </Compile>
     <Compile Include="PortKind.cs" />
+    <Compile Include="Tab.xaml.cs">
+      <DependentUpon>Tab.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="TabBar.xaml.cs">
+      <DependentUpon>TabBar.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="TabBg.xaml.cs">
+      <DependentUpon>TabBg.xaml</DependentUpon>
+    </Compile>
     <Compile Include="TargetPort.xaml.cs">
       <DependentUpon>TargetPort.xaml</DependentUpon>
     </Compile>
@@ -112,6 +121,18 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="MsgBox.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Tab.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="TabBar.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="TabBg.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
