@@ -4,6 +4,6 @@
              xmlns:local="clr-namespace:MeowType.NetDebug"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
-         
+        <FontFamily x:Key="FiraCodeLight">pack://application:,,,/#Fira Code Light</FontFamily>
     </Application.Resources>
 </Application>
