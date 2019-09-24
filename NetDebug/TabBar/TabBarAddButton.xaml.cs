@@ -1,11 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
-using System.Net.NetworkInformation;
-using System.Net.Sockets;
 using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -19,12 +15,14 @@ using System.Windows.Shapes;
 
 namespace MeowType.NetDebug
 {
+    using static Utils;
+
     /// <summary>
-    /// MainWindow.xaml 的交互逻辑
+    /// TabBarAddButton.xaml 的交互逻辑
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class TabBarAddButton : UserControl
     {
-        public MainWindow()
+        public TabBarAddButton()
         {
             InitializeComponent();
         }
@@ -32,24 +30,22 @@ namespace MeowType.NetDebug
         public bool IsFocus
         {
             get { return (bool)GetValue(IsFocusProperty); }
-            private set {
+            set {
                 SetValue(IsFocusProperty, value);
-                //tab_bar.IsFocus = value;
+                label.Foreground = value ? new SolidColorBrush(new Color() { R = 252, G = 252, B = 252, A = 255 }) : new SolidColorBrush(new Color() { R = 64, G = 64, B = 64, A = 255 });
             }
         }
 
+        public delegate void AddEvent(object sender, MouseButtonEventArgs e);
+        public event AddEvent OnAdd;
+
         // Using a DependencyProperty as the backing store for IsFocus.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty IsFocusProperty =
-            DependencyProperty.Register("IsFocus", typeof(bool), typeof(MainWindow), new PropertyMetadata(true));
+            DependencyProperty.Register("IsFocus", typeof(bool), typeof(TabBarAddButton), new PropertyMetadata(true));
 
-        private void Window_Activated(object sender, EventArgs e)
+        private void Bord_MouseUp(object sender, MouseButtonEventArgs e)
         {
-            IsFocus = true;
-        }
-
-        private void Window_Deactivated(object sender, EventArgs e)
-        {
-            IsFocus = false;
+            OnAdd?.Invoke(sender, e);
         }
     }
 }

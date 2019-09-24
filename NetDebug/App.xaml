@@ -4,6 +4,15 @@
              xmlns:local="clr-namespace:MeowType.NetDebug"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
-        <FontFamily x:Key="FiraCodeLight">pack://application:,,,/#Fira Code Light</FontFamily>
+        <FontFamily x:Key="FiraCodeLight">pack://application:,,,/Fonts/#Fira Code Light</FontFamily>
+        <Style TargetType="{x:Type local:Tab}">
+            <!--<Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type UserControl}">
+
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>-->
+        </Style>
     </Application.Resources>
 </Application>

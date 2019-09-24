@@ -1,11 +1,12 @@
-﻿<Window x:Class="MeowType.NetDebug.MainWindow"
+﻿<Window x:Name="window" x:Class="MeowType.NetDebug.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MeowType.NetDebug"
+        xmlns:dragablz="http://dragablz.net/winfx/xaml/dragablz"
         mc:Ignorable="d"
-        Title="Net Debug" Height="450" Width="800" MinHeight="250" MinWidth="600" FontFamily="Consolas, Fira Code">
+        Title="Net Debug" Height="450" Width="800" MinHeight="250" MinWidth="600" FontFamily="Consolas, Fira Code" Activated="Window_Activated" Deactivated="Window_Deactivated">
     <WindowChrome.WindowChrome>
         <WindowChrome GlassFrameThickness="-1" NonClientFrameEdges="Left,Bottom,Right"/>
     </WindowChrome.WindowChrome>
@@ -13,10 +14,6 @@
         <ControlTemplate TargetType="Window">
             <Border x:Name="RootBorder" Padding="3,35,3,3">
                 <Grid x:Name="RootGrid" Background="{TemplateBinding Background}">
-                    <Border Background="Transparent"
-                        VerticalAlignment="Top" Height="30" Margin="0 -29 140 0">
-                        <local:TabBar></local:TabBar>
-                    </Border>
                     <ContentPresenter />
                 </Grid>
             </Border>
@@ -28,7 +25,12 @@
             </ControlTemplate.Triggers>
         </ControlTemplate>
     </Window.Template>
-    <Grid Background="White">
-        <local:Udp></local:Udp>
+    <Grid>
+        <!--<Grid VerticalAlignment="Top" Height="30" Margin="0 -29 140 0">
+            <local:TabBar x:Name="tab_bar"></local:TabBar>
+        </Grid>-->
+        <Grid Margin="0,-30,0,0">
+            <local:TabView></local:TabView>
+        </Grid>
     </Grid>
 </Window>

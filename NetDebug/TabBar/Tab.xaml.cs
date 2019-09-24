@@ -29,16 +29,28 @@ namespace MeowType.NetDebug
         public delegate void OnCloseClick(object sender, RoutedEventArgs e);
         public event OnCloseClick OnClose;
 
+        public bool IsSelected
+        {
+            get { return (bool)GetValue(IsSelectedProperty); }
+            set { SetValue(IsSelectedProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for IsSelected.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty IsSelectedProperty =
+            DependencyProperty.Register("IsSelected", typeof(bool), typeof(Tab), new PropertyMetadata(true));
 
         public string Title
         {
-            get => (string)GetValue(TabTextProperty);
-            set
-            {
-                SetValue(TabTextProperty, value);
+            get { return (string)GetValue(TitleProperty); }
+            set {
+                SetValue(TitleProperty, value);
                 TabContent.Content = value;
             }
         }
+
+        // Using a DependencyProperty as the backing store for Title.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty TitleProperty =
+            DependencyProperty.Register("Title", typeof(string), typeof(Tab), new PropertyMetadata("NoTitle"));
 
         private void Close_Click(object sender, RoutedEventArgs e)
         {

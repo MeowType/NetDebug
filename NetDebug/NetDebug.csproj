@@ -50,8 +50,13 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Dragablz, Version=0.0.3.203, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Dragablz.0.0.3.203\lib\net45\Dragablz.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Windows" />
+    <Reference Include="System.Windows.Presentation" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -64,41 +69,59 @@
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
+    <Reference Include="XamlCSS, Version=2.2.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\XamlCSS.2.2.0\lib\net461\XamlCSS.dll</HintPath>
+    </Reference>
+    <Reference Include="XamlCSS.WPF, Version=2.2.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\XamlCSS.WPF.2.2.0\lib\net471\XamlCSS.WPF.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="MsgBox.Log.cs" />
-    <Compile Include="MsgBox.xaml.cs">
+    <Compile Include="Common\MsgBox.Log.cs" />
+    <Compile Include="Common\MsgBox.xaml.cs">
       <DependentUpon>MsgBox.xaml</DependentUpon>
     </Compile>
-    <Compile Include="PortKind.cs" />
-    <Compile Include="Tab.xaml.cs">
+    <Compile Include="Common\TabView.xaml.cs">
+      <DependentUpon>TabView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="TabBar\Tab.xaml.cs">
       <DependentUpon>Tab.xaml</DependentUpon>
     </Compile>
-    <Compile Include="TabBar.xaml.cs">
+    <Compile Include="TabBar\TabBar.xaml.cs">
       <DependentUpon>TabBar.xaml</DependentUpon>
     </Compile>
-    <Compile Include="TabBg.xaml.cs">
+    <Compile Include="TabBar\TabBarAddButton.xaml.cs">
+      <DependentUpon>TabBarAddButton.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="TabBar\TabBg.xaml.cs">
       <DependentUpon>TabBg.xaml</DependentUpon>
     </Compile>
-    <Compile Include="TargetPort.xaml.cs">
+    <Compile Include="Common\TargetPort.xaml.cs">
       <DependentUpon>TargetPort.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Udp.xaml.cs">
+    <Compile Include="TabView.xaml.cs">
+      <DependentUpon>TabView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Udp\Udp.xaml.cs">
       <DependentUpon>Udp.xaml</DependentUpon>
     </Compile>
-    <Compile Include="UDPTargetIP.xaml.cs">
+    <Compile Include="Udp\UDPTargetIP.xaml.cs">
       <DependentUpon>UDPTargetIP.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Utils.cs" />
-    <Page Include="LocalIP.xaml">
+    <Compile Include="Common\Utils.cs" />
+    <Page Include="Common\LocalIP.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="LocalPort.xaml">
+    <Page Include="Common\LocalPort.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Common\TabView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -110,41 +133,49 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="LocalIP.xaml.cs">
+    <Compile Include="Common\LocalIP.xaml.cs">
       <DependentUpon>LocalIP.xaml</DependentUpon>
     </Compile>
-    <Compile Include="LocalPort.xaml.cs">
+    <Compile Include="Common\LocalPort.xaml.cs">
       <DependentUpon>LocalPort.xaml</DependentUpon>
     </Compile>
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="MsgBox.xaml">
+    <Page Include="Common\MsgBox.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Tab.xaml">
+    <Page Include="TabBar\Tab.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="TabBar.xaml">
+    <Page Include="TabBar\TabBar.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="TabBg.xaml">
+    <Page Include="TabBar\TabBarAddButton.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="TargetPort.xaml">
+    <Page Include="TabBar\TabBg.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Udp.xaml">
+    <Page Include="Common\TargetPort.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="UDPTargetIP.xaml">
+    <Page Include="TabView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Udp\Udp.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Udp\UDPTargetIP.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -167,8 +198,9 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <Compile Include="Udp.Oper.cs" />
-    <Resource Include="FiraCode-Light.ttf" />
+    <Compile Include="Udp\Udp.Oper.cs" />
+    <Resource Include="Fonts\FiraCode-Light.ttf" />
+    <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -189,5 +221,6 @@
       <Install>false</Install>
     </BootstrapperPackage>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

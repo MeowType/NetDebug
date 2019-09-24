@@ -5,16 +5,18 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Media;
 
 namespace MeowType.NetDebug
 {
+    public class PortKind : UserControl { }
+
     internal static class Utils
     {
         public readonly static DependencyProperty DefaultPortProperty = DependencyProperty.Register("DefaultPort", typeof(string), typeof(PortKind), new PropertyMetadata("12345"));
-        public readonly static DependencyProperty TabTextProperty = DependencyProperty.Register("Title", typeof(string), typeof(Tab), new PropertyMetadata("NoTitle"));
 
-        public readonly static FontFamily FiraCodeLight = new FontFamily(new Uri("pack://application:,,,/"), "./#Fira Code Light");
+        public readonly static FontFamily FiraCodeLight = new FontFamily(new Uri("pack://application:,,,/"), "./Fonts/#Fira Code Light");
 
         public static IPAddress ParseIp(this string str)
         {

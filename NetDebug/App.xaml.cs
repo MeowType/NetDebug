@@ -13,5 +13,6 @@ namespace MeowType.NetDebug
     /// </summary>
     public partial class App : Application
     {
+
     }
 }

@@ -16,11 +16,11 @@ using System.Windows.Shapes;
 namespace MeowType.NetDebug
 {
     /// <summary>
-    /// TabBar.xaml 的交互逻辑
+    /// TabView.xaml 的交互逻辑
     /// </summary>
-    public partial class TabBar : UserControl
+    public partial class TabView : UserControl
     {
-        public TabBar()
+        public TabView()
         {
             InitializeComponent();
         }
