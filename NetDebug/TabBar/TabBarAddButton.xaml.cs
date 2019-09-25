@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
@@ -20,7 +21,7 @@ namespace MeowType.NetDebug
     /// <summary>
     /// TabBarAddButton.xaml 的交互逻辑
     /// </summary>
-    public partial class TabBarAddButton : UserControl
+    public partial class TabBarAddButton : Button
     {
         public TabBarAddButton()
         {
@@ -36,16 +37,8 @@ namespace MeowType.NetDebug
             }
         }
 
-        public delegate void AddEvent(object sender, MouseButtonEventArgs e);
-        public event AddEvent OnAdd;
-
         // Using a DependencyProperty as the backing store for IsFocus.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty IsFocusProperty =
             DependencyProperty.Register("IsFocus", typeof(bool), typeof(TabBarAddButton), new PropertyMetadata(true));
-
-        private void Bord_MouseUp(object sender, MouseButtonEventArgs e)
-        {
-            OnAdd?.Invoke(sender, e);
-        }
     }
 }

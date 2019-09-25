@@ -4,6 +4,8 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:MeowType.NetDebug"
+             xmlns:dragablz="http://dragablz.net/winfx/xaml/dragablz"
+             xmlns:dockablz="http://dragablz.net/winfx/xaml/dockablz"
              mc:Ignorable="d" Name="self"
              d:DesignHeight="30" d:DesignWidth="200" MinWidth="50" MaxWidth="200">
     <UserControl.Resources>
@@ -59,15 +61,21 @@
         <local:TabBg x:Name="tab_bg">
             <local:TabBg.Style>
                 <Style TargetType="local:TabBg">
-                    <Setter Property="Opacity" Value="0"></Setter>
+                    <Setter Property="Opacity" Value="1"></Setter>
                     <Style.Triggers>
-                        <DataTrigger Binding="{Binding IsSelected, ElementName=self}" Value="True">
-                            <Setter Property="Opacity" Value="1"></Setter>
+                        <DataTrigger Binding="{Binding IsSelected, ElementName=self}" Value="False">
+                            <Setter Property="Opacity" Value="0"></Setter>
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding IsHover, ElementName=self}" Value="True">
+                            <Setter Property="Opacity" Value="0.1"></Setter>
                         </DataTrigger>
                     </Style.Triggers>
                 </Style>
             </local:TabBg.Style>
         </local:TabBg>
+
+        <Border Height="10" Width="1" Background="#77FFFFFF" HorizontalAlignment="Left"></Border>
+        <Border Height="10" Width="1" Background="#77FFFFFF" HorizontalAlignment="Right"></Border>
 
         <Grid WindowChrome.IsHitTestVisibleInChrome="True">
             <Grid.ColumnDefinitions>
@@ -75,6 +83,9 @@
                 <ColumnDefinition Width="15"></ColumnDefinition>
             </Grid.ColumnDefinitions>
             <Label Name="TabContent" DataContext="{Binding ElementName=self}" Content="{Binding Title, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" Padding="5,0" Margin="5,0,15,0" VerticalAlignment="Center">
+                <Label.Effect>
+                    <DropShadowEffect ShadowDepth="0" BlurRadius="5" Opacity="0.5"/>
+                </Label.Effect>
                 <Label.Style>
                     <Style TargetType="Label">
                         <Setter Property="Foreground" Value="#FFFCFCFC"></Setter>
@@ -86,7 +97,7 @@
                     </Style>
                 </Label.Style>
             </Label>
-            <Button Grid.Column="1" Height="15" Width="15" BorderThickness="0" Padding="0" Margin="-15,0,0,0" Click="Close_Click" Style="{DynamicResource CloseButtonStyle}">
+            <Button Command="{x:Static dragablz:TabablzControl.CloseItemCommand}" Grid.Column="1" Height="15" Width="15" BorderThickness="0" Padding="0" Margin="-15,0,0,0" Click="Close_Click" Style="{DynamicResource CloseButtonStyle}">
                 <Button.OpacityMask>
                     <VisualBrush>
                         <VisualBrush.Visual>

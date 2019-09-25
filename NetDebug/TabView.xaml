@@ -7,6 +7,7 @@
              xmlns:dragablz="http://dragablz.net/winfx/xaml/dragablz"
              xmlns:dockablz="http://dragablz.net/winfx/xaml/dockablz"
              mc:Ignorable="d" 
+             d:DataContext="{d:DesignInstance local:TabViewModel, IsDesignTimeCreatable=False}"
              d:DesignHeight="450" d:DesignWidth="800">
     <UserControl.Resources>
         <ResourceDictionary>
@@ -14,7 +15,7 @@
                 <ResourceDictionary Source="pack://application:,,,/Dragablz;component/Themes/Generic.xaml" />
             </ResourceDictionary.MergedDictionaries>
             <DataTemplate DataType="{x:Type dragablz:HeaderedItemViewModel}">
-                <!--<ContentControl Content="{Binding Content}" Margin="4 4 4 4" FontSize="14" />-->
+                <ContentControl Content="{Binding Content}" Margin="0" />
             </DataTemplate>
             <!--<DataTemplate DataType="{x:Type dragablzDemo:CustomHeaderViewModel}">
                 <dragablzDemo:CustomHeader />
@@ -25,52 +26,71 @@
                                    x:Key="WindowIcon" x:Shared="False"
                                    ToolTip="Added via the HeaderPrefixContent property"/>-->
 
-            <Style TargetType="{x:Type dragablz:TabablzControl}" x:Key="TabablzControlStyle">
-                <!--<Setter Property="NewItemFactory" Value="{x:Static dragablzDemo:BoundExampleNewItem.Factory}" />-->
+            <Style TargetType="{x:Type dragablz:TabablzControl}" x:Key="ChromeControlStyle">
+                <Setter Property="NewItemFactory" Value="{x:Static local:NewTab.Factory}" />
                 <Setter Property="ItemsSource" Value="{Binding Items}" />
                 <Setter Property="ClosingItemCallback" Value="{Binding ClosingTabItemHandler}" />
                 <Setter Property="ShowDefaultAddButton" Value="True" />
                 <Setter Property="ShowDefaultCloseButton" Value="True" />
-                <Setter Property="AdjacentHeaderItemOffset" Value="-10" />
+                <Setter Property="AdjacentHeaderItemOffset" Value="0" />
 
                 <Setter Property="ItemContainerStyle" Value="{DynamicResource ChromeDragableTabItemStyle}" />
                 
                 <Setter Property="HeaderMemberPath" Value="Header" />
-                <!--<Setter Property="InterTabController" Value="{StaticResource InterTabController}" />-->
+                <Setter Property="InterTabController" Value="{StaticResource InterTabController}" />
                 <Setter Property="Margin" Value="0 0 0 0" />
 
                 <Setter Property="Template">
                     <Setter.Value>
                         <ControlTemplate TargetType="{x:Type dragablz:TabablzControl}">
-                            <Grid x:Name="templateRoot" ClipToBounds="true" SnapsToDevicePixels="true" KeyboardNavigation.TabNavigation="Local">
+                            <Grid Margin="0 -10 0 0" x:Name="templateRoot" ClipToBounds="true" SnapsToDevicePixels="true" KeyboardNavigation.TabNavigation="Local">
+                                <Grid.Effect>
+                                    <DropShadowEffect ShadowDepth="0" BlurRadius="10" Opacity="0.2"/>
+                                </Grid.Effect>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition x:Name="ColumnDefinition0"/>
                                     <ColumnDefinition x:Name="ColumnDefinition1" Width="0"/>
                                 </Grid.ColumnDefinitions>
                                 <Grid.RowDefinitions>
-                                    <RowDefinition x:Name="RowDefinition0" Height="30"/>
+                                    <RowDefinition x:Name="RowDefinition0" Height="40"/>
                                     <RowDefinition x:Name="RowDefinition1" Height="*"/>
                                 </Grid.RowDefinitions>
-                                <Border x:Name="contentPanel" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" Grid.Column="0" KeyboardNavigation.DirectionalNavigation="Contained" Grid.Row="1" KeyboardNavigation.TabIndex="2" KeyboardNavigation.TabNavigation="Local"
-                                Margin="0 -1 0 0">
+                                <Border x:Name="contentPanel" BorderThickness="0" Background="White" Grid.Column="0" KeyboardNavigation.DirectionalNavigation="Contained" Grid.Row="1" KeyboardNavigation.TabIndex="2" KeyboardNavigation.TabNavigation="Local"
+                                Margin="0 0 0 0">
                                     <Grid x:Name="PART_ItemsHolder" />
                                 </Border>
-                                <Grid Grid.Column="0" Grid.Row="0" Margin="10,0,140,0" x:Name="HeaderContainerGrid" Visibility="{TemplateBinding IsHeaderPanelVisible, Converter={StaticResource BooleanToVisibilityConverter}}">
-                                    <!--<Grid.Resources>
+                                <Grid ClipToBounds="True" Margin="0 10 0 0 ">
+                                    <Grid Background="white" Height="1" VerticalAlignment="Bottom" Margin="0 0 140 0">
+                                        <Grid.Effect>
+                                            <DropShadowEffect ShadowDepth="0" BlurRadius="5" Opacity="0.3"/>
+                                        </Grid.Effect>
+                                        <Grid.OpacityMask>
+                                            <LinearGradientBrush>
+                                                <GradientStop Color="white" Offset="0.9" />
+                                                <GradientStop Color="Transparent" Offset="1.0" />
+                                            </LinearGradientBrush>
+                                        </Grid.OpacityMask>
+                                    </Grid>
+                                </Grid>
+                                <Grid Background="white" Height="1" VerticalAlignment="Bottom"></Grid>
+                                <Grid Margin="0 10 0 0">
+                                    <Grid Grid.Column="0" Grid.Row="0" Margin="10,0,140,0" x:Name="HeaderContainerGrid" Visibility="{TemplateBinding IsHeaderPanelVisible, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                        <!--<Grid.Resources>
                                         <Style TargetType="{x:Type Button}" BasedOn="{StaticResource StandardEmbeddedButtonStyle}"></Style>
                                     </Grid.Resources>-->
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="Auto" />
-                                        <ColumnDefinition Width="Auto" />
-                                        <ColumnDefinition Width="Auto" />
-                                        <!--<ColumnDefinition Width="*" />-->
-                                    </Grid.ColumnDefinitions>
-                                    <!--<ContentControl Grid.Column="0" x:Name="PrefixContentControl" 
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto" />
+                                            <ColumnDefinition Width="Auto" />
+                                            <ColumnDefinition Width="Auto" />
+                                            <!--<ColumnDefinition Width="*" />-->
+                                        </Grid.ColumnDefinitions>
+                                        <ContentControl Grid.Column="0" x:Name="PrefixContentControl" 
                                             Content="{TemplateBinding HeaderPrefixContent}"
                                             ContentStringFormat="{TemplateBinding HeaderPrefixContentStringFormat}"
                                             ContentTemplate="{TemplateBinding HeaderPrefixContentStringFormat}"
-                                            ContentTemplateSelector="{TemplateBinding HeaderPrefixContentTemplateSelector}"/>-->
-                                    <dragablz:DragablzItemsControl x:Name="PART_HeaderItemsControl"    
+                                            ContentTemplateSelector="{TemplateBinding HeaderPrefixContentTemplateSelector}"/>
+
+                                        <dragablz:DragablzItemsControl x:Name="PART_HeaderItemsControl"    
                                                         Grid.Column="1"
                                                         ItemsSource="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Items}"                                                                                                            
                                                         ItemContainerStyle="{TemplateBinding ItemContainerStyle}"
@@ -78,37 +98,36 @@
                                                         KeyboardNavigation.TabIndex="1" Panel.ZIndex="1"
                                                         ItemTemplate="{TemplateBinding HeaderItemTemplate}"
                                                         FixedItemCount="{TemplateBinding FixedHeaderCount}"
-                                                        Style="{StaticResource TabablzDragablzItemsControlStyle}">
-                                        <dragablz:DragablzItemsControl.MaxWidth>
-                                            <MultiBinding>
-                                                <MultiBinding.Converter>
-                                                    <dragablz:TabablzHeaderSizeConverter Orientation="Horizontal"/>
-                                                </MultiBinding.Converter>
-                                                <Binding RelativeSource="{RelativeSource TemplatedParent}" Path="ActualWidth" />
-                                                <Binding RelativeSource="{RelativeSource Self}" Path="ItemsPresenterWidth" />
-                                                <Binding ElementName="PrefixContentControl" Path="ActualWidth" />
-                                                <Binding ElementName="DefaultAddButton" Path="DesiredSize.Width" />
-                                                <Binding ElementName="SuffixContentControl" Path="DesiredSize.Width" />
-                                            </MultiBinding>
-                                        </dragablz:DragablzItemsControl.MaxWidth>
-                                    </dragablz:DragablzItemsControl>
-                                    
-                                    
-                                    <Button Style="{StaticResource AddItemCommandButtonStyle}"
-                                    x:Name="DefaultAddButton"
+                                                        Style="{DynamicResource ChromeDragablzItemsControlStyle}">
+                                            <dragablz:DragablzItemsControl.MaxWidth>
+                                                <MultiBinding>
+                                                    <MultiBinding.Converter>
+                                                        <dragablz:TabablzHeaderSizeConverter Orientation="Horizontal"/>
+                                                    </MultiBinding.Converter>
+                                                    <Binding RelativeSource="{RelativeSource TemplatedParent}" Path="ActualWidth" />
+                                                    <Binding RelativeSource="{RelativeSource Self}" Path="ItemsPresenterWidth" />
+                                                    <Binding ElementName="PrefixContentControl" Path="ActualWidth" />
+                                                    <Binding ElementName="DefaultAddButton" Path="DesiredSize.Width" />
+                                                    <Binding ElementName="SuffixContentControl" Path="DesiredSize.Width" />
+                                                </MultiBinding>
+                                            </dragablz:DragablzItemsControl.MaxWidth>
+                                        </dragablz:DragablzItemsControl>
+
+                                        <local:TabBarAddButton x:Name="DefaultAddButton"
                                     Grid.Column="2"
                                     Command="{x:Static dragablz:TabablzControl.AddItemCommand}"
+                                    Template="{DynamicResource ButtonBaseControlTemplateFuck}"
                                     Visibility="{TemplateBinding ShowDefaultAddButton, Converter={StaticResource BooleanToVisibilityConverter}}"
-                                    />
-                                    
-                                    
-                                    <ContentControl Grid.Column="3" x:Name="SuffixContentControl" 
+                                    ></local:TabBarAddButton>
+
+                                        <ContentControl Grid.Column="3" x:Name="SuffixContentControl" 
                                             Content="{TemplateBinding HeaderSuffixContent}"
                                             ContentStringFormat="{TemplateBinding HeaderSuffixContentStringFormat}"
                                             ContentTemplate="{TemplateBinding HeaderSuffixContentStringFormat}"
                                             ContentTemplateSelector="{TemplateBinding HeaderSuffixContentTemplateSelector}"                                            
                                             HorizontalAlignment="Stretch"
                                             />
+                                    </Grid>
                                 </Grid>
                             </Grid>
                             <ControlTemplate.Triggers>
@@ -120,7 +139,7 @@
                                     <Setter Property="Grid.Row" TargetName="contentPanel" Value="0"/>
                                     <Setter Property="Height" TargetName="RowDefinition0" Value="*"/>
                                     <Setter Property="Height" TargetName="RowDefinition1" Value="Auto"/>
-                                    <Setter Property="Margin" TargetName="PART_HeaderItemsControl" Value="2,0,2,2"/>
+                                    <!--<Setter Property="Margin" TargetName="PART_HeaderItemsControl" Value="2,0,2,2"/>-->
                                 </Trigger>
                                 <Trigger Property="TabStripPlacement" Value="Left">
                                     <Setter Property="Grid.Row" TargetName="PART_HeaderItemsControl" Value="0"/>
@@ -131,7 +150,7 @@
                                     <Setter Property="Width" TargetName="ColumnDefinition1" Value="*"/>
                                     <Setter Property="Height" TargetName="RowDefinition0" Value="*"/>
                                     <Setter Property="Height" TargetName="RowDefinition1" Value="0"/>
-                                    <Setter Property="Margin" TargetName="PART_HeaderItemsControl" Value="2,2,0,2"/>
+                                    <!--<Setter Property="Margin" TargetName="PART_HeaderItemsControl" Value="2,2,0,2"/>-->
                                 </Trigger>
                                 <Trigger Property="TabStripPlacement" Value="Right">
                                     <Setter Property="Grid.Row" TargetName="PART_HeaderItemsControl" Value="0"/>
@@ -142,7 +161,7 @@
                                     <Setter Property="Width" TargetName="ColumnDefinition1" Value="Auto"/>
                                     <Setter Property="Height" TargetName="RowDefinition0" Value="*"/>
                                     <Setter Property="Height" TargetName="RowDefinition1" Value="0"/>
-                                    <Setter Property="Margin" TargetName="PART_HeaderItemsControl" Value="0,2,2,2"/>
+                                    <!--<Setter Property="Margin" TargetName="PART_HeaderItemsControl" Value="0,2,2,2"/>-->
                                 </Trigger>
                                 <Trigger Property="IsEnabled" Value="false">
                                     <Setter Property="TextElement.Foreground" TargetName="templateRoot" Value="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}"/>
@@ -162,6 +181,33 @@
                 </Style.Triggers>
             </Style>
 
+            <Style TargetType="{x:Type dragablz:DragablzItemsControl}" x:Key="ChromeDragablzItemsControlStyle">
+                <Setter Property="HorizontalAlignment" Value="Left" />
+                <Setter Property="VerticalAlignment" Value="Top" />
+                <Setter Property="ItemsPanel">
+                    <Setter.Value>
+                        <ItemsPanelTemplate>
+                            <Canvas IsItemsHost="True" />
+                        </ItemsPanelTemplate>
+                    </Setter.Value>
+                </Setter>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type dragablz:DragablzItemsControl}">
+                            <Border>
+                                <Grid Margin="0 0 0 0">
+                                    <ItemsPresenter Margin="0 0 0 0"
+                                            HorizontalAlignment="Left"
+                                            VerticalAlignment="Top"
+                                            Width="{TemplateBinding ItemsPresenterWidth}"
+                                            Height="{TemplateBinding ItemsPresenterHeight}"/>
+                                </Grid>
+                            </Border>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
             <Style x:Key="ChromeDragableTabItemStyle"  TargetType="{x:Type dragablz:DragablzItem}">
                 <Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual}"/>
                 <Setter Property="Foreground" Value="#FF454545"/>
@@ -174,11 +220,11 @@
                     <Setter.Value>
                         <ControlTemplate TargetType="{x:Type dragablz:DragablzItem}">
                             <Grid x:Name="templateRoot" SnapsToDevicePixels="true" Margin="0 0 0 0">
-                                <Grid Height="30" Width="200" MinWidth="50" MaxWidth="200"
+                                <Grid Height="30" MinWidth="50" MaxWidth="200"
                                          Background="{TemplateBinding Background}"                                          
                                          Margin="0">
-                                    <local:Tab x:Name="tab" IsSelected="False"></local:Tab>
-                                    <Thumb Grid.Column="0" HorizontalAlignment="Stretch" VerticalContentAlignment="Stretch" x:Name="PART_Thumb" Margin="0 0 25 0" Style="{StaticResource InvisibleThumbStyle}"/>
+                                    <local:Tab x:Name="tab" IsSelected="False" Title="{TemplateBinding ContentControl.Content}"></local:Tab>
+                                    <Thumb Grid.Column="0" HorizontalAlignment="Stretch" VerticalContentAlignment="Stretch" x:Name="PART_Thumb" Margin="0 0 25 0" Style="{StaticResource InvisibleThumbStyle}"  WindowChrome.IsHitTestVisibleInChrome="True"/>
                                     <!--<local:TabBg></local:TabBg>
                                     <Grid>
                                         <Grid.ColumnDefinitions>
@@ -215,6 +261,13 @@
                                     <!--<Setter Property="Background" Value="{StaticResource TabItem.Selected.Background}" TargetName="Trapezoid"/>-->
                                     <!--<Setter Property="LongBasePenBrush" Value="{StaticResource TabItem.Selected.Background}" TargetName="Trapezoid"/>-->
                                 </Trigger>
+                                <MultiTrigger>
+                                    <MultiTrigger.Conditions>
+                                        <Condition Property="IsMouseOver" Value="True"/>
+                                        <Condition Property="IsSelected" Value="False"/>
+                                    </MultiTrigger.Conditions>
+                                    <Setter TargetName="tab" Property="IsHover" Value="True"></Setter>
+                                </MultiTrigger>
                             </ControlTemplate.Triggers>
                         </ControlTemplate>
                     </Setter.Value>
@@ -223,16 +276,16 @@
         </ResourceDictionary>
     </UserControl.Resources>
     <Grid>
-        <dragablz:TabablzControl Style="{StaticResource TabablzControlStyle}">
+        <dragablz:TabablzControl x:Name="InitialTabablzControl" Style="{DynamicResource ChromeControlStyle}">
             <dragablz:TabablzControl.InterTabController>
                 <dragablz:InterTabController />
             </dragablz:TabablzControl.InterTabController>
-            <TabItem Header="Tab No. 1" IsSelected="True">
+            <!--<TabItem Header="Tab No. 1" IsSelected="True">
                 <TextBlock>Hello World</TextBlock>
             </TabItem>
             <TabItem Header="Tab No. 2">
                 <TextBlock>We Have Tearable Tabs!</TextBlock>
-            </TabItem>
+            </TabItem>-->
         </dragablz:TabablzControl>
     </Grid>
 </UserControl>

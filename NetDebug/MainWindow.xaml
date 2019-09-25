@@ -30,7 +30,7 @@
             <local:TabBar x:Name="tab_bar"></local:TabBar>
         </Grid>-->
         <Grid Margin="0,-30,0,0">
-            <local:TabView></local:TabView>
+            <local:TabView x:Name="InitialTabablzControl"></local:TabView>
         </Grid>
     </Grid>
 </Window>

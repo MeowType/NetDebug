@@ -40,9 +40,5 @@ namespace MeowType.NetDebug
         public static readonly DependencyProperty IsFocusProperty =
             DependencyProperty.Register("IsFocus", typeof(bool), typeof(TabBar), new PropertyMetadata(true));
 
-        private void Add_but_OnAdd(object sender, MouseButtonEventArgs e)
-        {
-
-        }
     }
 }

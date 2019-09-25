@@ -14,7 +14,7 @@
         <RichTextBox Grid.Row="0" Name="Msg_Box" VerticalScrollBarVisibility="Auto" FontFamily="Consolas, Fira Code Light, Microsoft YaHei UI Light" IsReadOnly="True" Loaded="MsgBox_Loaded"/>
         <Grid Grid.Row="1" Margin="0,5,0,0">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="55"></ColumnDefinition>
+                <ColumnDefinition Width="65"></ColumnDefinition>
                 <ColumnDefinition Width="1*"></ColumnDefinition>
                 <ColumnDefinition Width="0.25*" MinWidth="50" MaxWidth="120"></ColumnDefinition>
             </Grid.ColumnDefinitions>

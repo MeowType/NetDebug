@@ -39,6 +39,16 @@ namespace MeowType.NetDebug
         public static readonly DependencyProperty IsSelectedProperty =
             DependencyProperty.Register("IsSelected", typeof(bool), typeof(Tab), new PropertyMetadata(true));
 
+        public bool IsHover
+        {
+            get { return (bool)GetValue(IsHoverProperty); }
+            set { SetValue(IsHoverProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for IsSelected.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty IsHoverProperty =
+            DependencyProperty.Register("IsHover", typeof(bool), typeof(Tab), new PropertyMetadata(false));
+
         public string Title
         {
             get { return (string)GetValue(TitleProperty); }
