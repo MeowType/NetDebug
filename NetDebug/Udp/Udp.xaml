@@ -11,53 +11,23 @@
             <ColumnDefinition MinWidth="200" Width="0.5*" MaxWidth="300"></ColumnDefinition>
             <ColumnDefinition Width="1*"></ColumnDefinition>
         </Grid.ColumnDefinitions>
-        <ScrollViewer Grid.Column="0" RenderTransformOrigin="0.5,0.5">
-            <ScrollViewer.RenderTransform>
-                <TransformGroup>
-                    <ScaleTransform ScaleY="1" ScaleX="-1"/>
-                    <SkewTransform AngleY="0" AngleX="0"/>
-                    <RotateTransform Angle="0"/>
-                    <TranslateTransform/>
-                </TransformGroup>
-            </ScrollViewer.RenderTransform>
-            <Grid Margin="5" RenderTransformOrigin="0.5,0.5">
-                <Grid.RenderTransform>
-                    <TransformGroup>
-                        <ScaleTransform ScaleY="1" ScaleX="-1"/>
-                        <SkewTransform AngleY="0" AngleX="0"/>
-                        <RotateTransform Angle="0"/>
-                        <TranslateTransform/>
-                    </TransformGroup>
-                </Grid.RenderTransform>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="50"></RowDefinition>
-                    <RowDefinition Height="50"></RowDefinition>
-                    <RowDefinition Height="100"></RowDefinition>
-                    <RowDefinition Height="50"></RowDefinition>
-                    <RowDefinition Height="50"></RowDefinition>
-                    <RowDefinition Height="50"></RowDefinition>
-                </Grid.RowDefinitions>
-                <local:LocalIP Grid.Row="0" x:Name="UDP_Local_ip"/>
-                <local:LocalPort Grid.Row="1" x:Name="UDP_Local_port"/>
-                <Grid Grid.Row="2" Margin="0,10">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="1*"></RowDefinition>
-                        <RowDefinition Height="1*"></RowDefinition>
-                        <RowDefinition Height="1*"></RowDefinition>
-                        <RowDefinition Height="1*"></RowDefinition>
-                    </Grid.RowDefinitions>
-                    <RadioButton Name="UDP_type_defalut" GroupName="UDP_type" IsChecked="True">Default</RadioButton>
-                    <RadioButton Name="UDP_type_broadcast" GroupName="UDP_type" Grid.Row="1" Checked="UDP_type_broadcast_Checked" Unchecked="UDP_type_broadcast_UnChecked">Broadcast</RadioButton>
-                    <RadioButton Name="UDP_type_multicast" GroupName="UDP_type" Grid.Row="2" Checked="UDP_type_multicast_Checked" Unchecked="UDP_type_multicast_Unchecked">Multicast</RadioButton>
-                    <ComboBox Grid.Row="3" IsEditable="True" Name="UDP_multicast_ip" SelectedIndex="0" Margin="20,0,0,0">
+        <local:LeftScroll Grid.Column="0">
+            <StackPanel Margin="5">
+                <local:LocalIP x:Name="UDP_Local_ip"/>
+                <local:LocalPort x:Name="UDP_Local_port"/>
+                <StackPanel Margin="0,10">
+                    <RadioButton Height="25" Name="UDP_type_defalut" GroupName="UDP_type" IsChecked="True">Default</RadioButton>
+                    <RadioButton Height="25" Name="UDP_type_broadcast" GroupName="UDP_type" Checked="UDP_type_broadcast_Checked" Unchecked="UDP_type_broadcast_UnChecked">Broadcast</RadioButton>
+                    <RadioButton Height="25" Name="UDP_type_multicast" GroupName="UDP_type" Checked="UDP_type_multicast_Checked" Unchecked="UDP_type_multicast_Unchecked">Multicast</RadioButton>
+                    <ComboBox Height="25" IsEditable="True" Name="UDP_multicast_ip" SelectedIndex="0" Margin="20,0,0,0">
                         <Label>224.0.0.0</Label>
                     </ComboBox>
-                </Grid>
-                <Button Name="UDP_button" Grid.Row="3" Margin="20,5" Click="Open_Button_Click" FontSize="16">Open</Button>
-                <local:UDPTargetIP Grid.Row="4" x:Name="UDP_Target_ip"></local:UDPTargetIP>
-                <local:TargetPort Grid.Row="5" x:Name="UDP_Target_port"/>
-            </Grid>
-        </ScrollViewer>
+                </StackPanel>
+                <Button Height="45" Name="UDP_button" Grid.Row="3" Margin="20,5" Click="Open_Button_Click" FontSize="16">Open</Button>
+                <local:UDPTargetIP x:Name="UDP_Target_ip"></local:UDPTargetIP>
+                <local:TargetPort x:Name="UDP_Target_port"/>
+            </StackPanel>
+        </local:LeftScroll>
         <local:MsgBox x:Name="MsgBox" Grid.Column="1" Margin="5" OnSend="MsgBox_OnSend"></local:MsgBox>
     </Grid>
 </UserControl>

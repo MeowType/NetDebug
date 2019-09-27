@@ -41,5 +41,11 @@ namespace MeowType.NetDebug
             TabView.Header = "Udp";
             TabView.Content = new Udp();
         }
+
+        private void TcpServer_Click(object sender, RoutedEventArgs e)
+        {
+            TabView.Header = "Tcp Server";
+            TabView.Content = new TcpServer();
+        }
     }
 }

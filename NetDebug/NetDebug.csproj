@@ -84,12 +84,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Common\LeftScroll.cs" />
     <Compile Include="Common\MsgBox.Log.cs" />
     <Compile Include="Common\MsgBox.xaml.cs">
       <DependentUpon>MsgBox.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Common\TabView.xaml.cs">
-      <DependentUpon>TabView.xaml</DependentUpon>
     </Compile>
     <Compile Include="EmptyTab.xaml.cs">
       <DependentUpon>EmptyTab.xaml</DependentUpon>
@@ -114,6 +112,9 @@
     <Compile Include="TabView.xaml.cs">
       <DependentUpon>TabView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Tcp\Server\TcpServer.xaml.cs">
+      <DependentUpon>TcpServer.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Udp\Udp.xaml.cs">
       <DependentUpon>Udp.xaml</DependentUpon>
     </Compile>
@@ -121,15 +122,15 @@
       <DependentUpon>UDPTargetIP.xaml</DependentUpon>
     </Compile>
     <Compile Include="Common\Utils.cs" />
+    <Page Include="Themes\Generic.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Common\LocalIP.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Common\LocalPort.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Common\TabView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -180,6 +181,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="TabView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Tcp\Server\TcpServer.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

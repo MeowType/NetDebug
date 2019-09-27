@@ -223,7 +223,7 @@
                                 <Grid Height="30" MinWidth="50" MaxWidth="200"
                                          Background="{TemplateBinding Background}"                                          
                                          Margin="0">
-                                    <local:Tab x:Name="tab" IsSelected="False" Title="{TemplateBinding ContentControl.Content}"></local:Tab>
+                                    <local:Tab x:Name="tab" IsSelected="False" Content="{TemplateBinding ContentControl.Content}"></local:Tab>
                                     <Thumb Grid.Column="0" HorizontalAlignment="Stretch" VerticalContentAlignment="Stretch" x:Name="PART_Thumb" Margin="0 0 25 0" Style="{StaticResource InvisibleThumbStyle}"  WindowChrome.IsHitTestVisibleInChrome="True"/>
                                     <!--<local:TabBg></local:TabBg>
                                     <Grid>
@@ -254,7 +254,7 @@
                             </Grid>
                             <ControlTemplate.Triggers>
                                 <Trigger Property="dragablz:TabablzControl.IsWrappingTabItem" Value="True">
-                                    <Setter TargetName="tab" Property="Title" Value="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=DataContext.Header}" />
+                                    <Setter TargetName="tab" Property="Content" Value="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=DataContext.Header}" />
                                 </Trigger>
                                 <Trigger Property="IsSelected" Value="True">
                                     <Setter TargetName="tab" Property="IsSelected" Value="True"></Setter>

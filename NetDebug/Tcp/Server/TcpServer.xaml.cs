@@ -13,16 +13,21 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace MeowType.NetDebug.Common
+namespace MeowType.NetDebug
 {
     /// <summary>
-    /// TabView.xaml 的交互逻辑
+    /// TcpServer.xaml 的交互逻辑
     /// </summary>
-    public partial class TabView : UserControl
+    public partial class TcpServer : UserControl
     {
-        public TabView()
+        public TcpServer()
         {
             InitializeComponent();
+        }
+
+        private void MsgBox_OnSend(object sender, RoutedEventArgs e, Func<string> Send_Msg)
+        {
+
         }
     }
 }

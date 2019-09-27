@@ -49,18 +49,15 @@ namespace MeowType.NetDebug
         public static readonly DependencyProperty IsHoverProperty =
             DependencyProperty.Register("IsHover", typeof(bool), typeof(Tab), new PropertyMetadata(false));
 
-        public string Title
+        public new object Content
         {
-            get { return (string)GetValue(TitleProperty); }
-            set {
-                SetValue(TitleProperty, value);
-                TabContent.Content = value;
-            }
+            get { return (object)GetValue(ContentProperty); }
+            set { SetValue(ContentProperty, value); }
         }
 
-        // Using a DependencyProperty as the backing store for Title.  This enables animation, styling, binding, etc...
-        public static readonly DependencyProperty TitleProperty =
-            DependencyProperty.Register("Title", typeof(string), typeof(Tab), new PropertyMetadata("NoTitle"));
+        // Using a DependencyProperty as the backing store for Content.  This enables animation, styling, binding, etc...
+        public new static readonly DependencyProperty ContentProperty =
+            DependencyProperty.Register("Content", typeof(object), typeof(Tab), new PropertyMetadata("No Title"));
 
         private void Close_Click(object sender, RoutedEventArgs e)
         {

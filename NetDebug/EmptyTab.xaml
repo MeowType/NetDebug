@@ -26,7 +26,7 @@
                 <RowDefinition Height="*"></RowDefinition>
                 <RowDefinition Height="*"></RowDefinition>
             </Grid.RowDefinitions>
-            <Button Margin="10" FontSize="25">Tcp Server</Button>
+            <Button Margin="10" FontSize="25" Click="TcpServer_Click">Tcp Server</Button>
             <Button Margin="10" FontSize="25" Grid.Column="1">Tcp Client</Button>
             <Button Margin="10" FontSize="25" Grid.Row="1" Click="Udp_Click">Udp</Button>
             <Button Margin="10" FontSize="25" Grid.Row="1" Grid.Column="1">Custom</Button>
